@@ -8,7 +8,7 @@ export const getters = {}
 export const actions = {
   async create({ commit }, payload) {
     try {
-      await this.$axios.$post('/api/create', payload)
+      return await this.$axios.$post('/api/create', payload)
     } catch (e) {
       commit('setError', e)
     }

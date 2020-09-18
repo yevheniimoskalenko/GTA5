@@ -26,7 +26,9 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button @click="create">Create new Account</el-button>
+            <el-button :loading="loading" @click="create"
+              >Create new Account</el-button
+            >
             <nuxt-link to="login">Sign in</nuxt-link>
           </el-form-item>
         </el-form>
@@ -40,8 +42,6 @@ export default {
   auth: false,
   data() {
     const firstValidator = (rule, value, callback) => {
-      console.log(rule)
-
       if (value === '') {
         callback(new Error('Please requred the password'))
       } else {
@@ -52,7 +52,6 @@ export default {
       }
     }
     const secondValidator = (rule, value, callback) => {
-      console.log(rule)
       if (value === '') {
         callback(new Error('Please requred the password again'))
       } else if (value !== this.data.password) {
@@ -63,7 +62,12 @@ export default {
     }
 
     return {
-      data: { email: '', password: '', confirmPassword: '' },
+      loading: false,
+      data: {
+        email: 'test@gmail.com',
+        password: '1qaz2wsx',
+        confirmPassword: '1qaz2wsx'
+      },
       rules: {
         email: [
           { required: true, message: 'email is required' },
@@ -77,16 +81,25 @@ export default {
   methods: {
     create() {
       this.$refs.form.validate(async (valid) => {
+        this.loading = true
+
         if (valid) {
           try {
             const data = {
               email: this.data.email,
               password: this.data.password
             }
-            await this.$store.dispatch('create', data)
-          } catch (e) {}
+            const response = await this.$store.dispatch('create', data)
+            this.$message({
+              message: response.message,
+              type: response.status
+            })
+          } catch (e) {
+            this.loading = false
+          } finally {
+            this.loading = false
+          }
         } else {
-          return false
         }
       })
     }
