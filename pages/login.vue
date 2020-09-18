@@ -27,6 +27,7 @@
 
 <script>
 export default {
+  auth: false,
   data() {
     return {
       data: { email: '', password: '' },
@@ -47,7 +48,7 @@ export default {
               email: this.data.email,
               password: this.data.password
             }
-            await this.$store.dispatch('login', data)
+            await this.$auth.loginWith('local', { data })
           } catch (e) {}
         } else {
           return false

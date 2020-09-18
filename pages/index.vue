@@ -37,6 +37,7 @@
 
 <script>
 export default {
+  auth: false,
   data() {
     const firstValidator = (rule, value, callback) => {
       console.log(rule)

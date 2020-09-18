@@ -1,9 +1,9 @@
 const { Router } = require('express')
-// const auth = require('../controller/auth.controller.js')
-// const login = require('../controller/login.controller.js')
-// const verefy = require('../controller/verefy.controller.js')
 const router = Router()
-// router.post('/create', auth)
-// router.post('/login', login)
-// router.post('/verefy', verefy)
+
+const { create, login } = require('../controller/auth.controller.js')
+
+router.post('/create', create)
+router.post('/login', login)
+
 module.exports = router
