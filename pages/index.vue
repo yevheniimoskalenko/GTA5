@@ -13,21 +13,21 @@
             <el-input
               v-model="data.password"
               type="password"
+              autocomplete="off"
               show-password
-            ></el-input>
+            />
+          </el-form-item>
+          <el-form-item label="Confirm password" prop="confirmPassword">
+            <el-input
+              v-model="data.confirmPassword"
+              type="password"
+              show-password
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item>
-            <vue-recaptcha
-              ref="recaptcha"
-              sitekey="6LealJMUAAAAAEtYcN5wjrIIPWNIZ4WeaEGVkff8"
-              :load-recaptcha-script="true"
-              @expired="onCaptchaExpired"
-              @verify="onCaptchaVerified"
-            ></vue-recaptcha>
-
-            <el-button :disabled="!verefy" @click="create"
-              >Create new Account</el-button
-            >
+            <el-button @click="create">Create new Account</el-button>
+            <nuxt-link to="login">Sign in</nuxt-link>
           </el-form-item>
         </el-form>
       </el-col>
@@ -37,24 +37,46 @@
 
 <script>
 export default {
-  components: {},
   data() {
+    const firstValidator = (rule, value, callback) => {
+      console.log(rule)
+
+      if (value === '') {
+        callback(new Error('Please requred the password'))
+      } else {
+        if (this.data.confirmPassword !== '') {
+          this.$refs.form.validateField('confirmPassword')
+        }
+        callback()
+      }
+    }
+    const secondValidator = (rule, value, callback) => {
+      console.log(rule)
+      if (value === '') {
+        callback(new Error('Please requred the password again'))
+      } else if (value !== this.data.password) {
+        callback(new Error("Two requreds don't match!"))
+      } else {
+        callback()
+      }
+    }
+
     return {
-      verefy: false,
-      data: { email: '', password: '' },
+      data: { email: '', password: '', confirmPassword: '' },
       rules: {
         email: [
           { required: true, message: 'email is required' },
           { type: 'email', message: 'email is need valide' }
         ],
-        password: [{ required: true, message: 'password is required' }]
+        password: [{ validator: firstValidator, trigger: 'blur' }],
+        confirmPassword: [{ validator: secondValidator, trigger: 'blur' }]
       }
     }
   },
   methods: {
     create() {
       this.$refs.form.validate(async (valid) => {
-        if (valid && this.verefy === true) {
+        if (valid) {
           try {
             const data = {
               email: this.data.email,
@@ -66,27 +88,12 @@ export default {
           return false
         }
       })
-    },
-    async onCaptchaVerified(recaptchaToken) {
-      const token = { token: recaptchaToken }
-      const verefy = await this.$store.dispatch('verefy', token)
-      this.verefy = verefy.success
-    },
-    onCaptchaExpired() {
-      this.$refs.recaptcha.reset()
     }
-  }
+  },
+  head: { title: 'Sign up' }
 }
 </script>
 <style lang="scss" scoped>
-.img img {
-  width: 200px;
-}
-.img {
-  display: flex;
-  justify-content: center;
-  margin: 50px 0;
-}
 .content {
   display: flex;
   justify-content: center;
