@@ -28,7 +28,7 @@ module.exports.login = async (req, res) => {
   if (candidate) {
     const isPasswordcorrect = compareSync(password, candidate.password)
     if (isPasswordcorrect) {
-      const token = jwt.sign({ email: candidate.email }, process.env.secret)
+      const token = jwt.sign({ email: candidate.email }, 'fooGTA')
       return res.json({ token })
     } else {
       return res.json({ status: 'error', message: 'password is not correct' })

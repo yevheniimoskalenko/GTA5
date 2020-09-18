@@ -5,11 +5,14 @@ require('dotenv').config()
 
 const app = express()
 
-mongoose.connect(process.env.db, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-})
+mongoose.connect(
+  'mongodb+srv://yevhenii:was123456789was@cluster0-vrxpp.mongodb.net/gta',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  }
+)
 
 app.use(express.json())
 
