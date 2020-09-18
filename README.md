@@ -1,6 +1,6 @@
-# reCAPTCHA
+# GTA5
 
-> captcha from google and firebase.auth node.js nuxt,vuex
+> Auth for site
 
 ## Build Setup
 
