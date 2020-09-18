@@ -1,19 +1,10 @@
-# GTA
+# reCAPTCHA
 
-> Авторизация
+> captcha from google and firebase.auth node.js nuxt,vuex
 
 ## Build Setup
 
 ```bash
-# Для того чтобы авторизация работала нужно, создать файл
-#.env
-# и вписать следующие строки кода
-# db=mongodb+srv://[login]:[password]@cluster0-vrxpp.mongodb.net/gta
-# secret=fooGTA
-
-# чтобы сохранить в mongodb
-
-
 # install dependencies
 $ npm install
 

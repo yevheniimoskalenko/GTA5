@@ -10,7 +10,7 @@ router.post('/login', login)
 router.post('/logout', (req, res, next) => {
   return res.json({ status: 'OK' })
 })
-router.get('/user', jwt({ secret: process.env.secret }), (req, res, next) =>
+router.get('/user', jwt({ secret: 'fooGTA' }), (req, res, next) =>
   res.json({ user: req.user })
 )
 
