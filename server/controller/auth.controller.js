@@ -1,7 +1,8 @@
-const jsonwebtoken = require('jsonwebtoken')
-const { hashSync, genSaltSync } = require('bcrypt-nodejs')
+const jwt = require('jsonwebtoken')
+const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs')
 const Person = require('../model/person.model')
 const salt = genSaltSync(10)
+require('dotenv').config()
 module.exports.create = async (req, res) => {
   const { email, password } = req.body // spread
   try {
@@ -19,6 +20,20 @@ module.exports.create = async (req, res) => {
     return res.json({ error: e })
   }
 }
-module.exports.login = (req, res) => {
-  console.log(req.body)
+module.exports.login = async (req, res) => {
+  const { email, password } = req.body // spread
+
+  const candidate = await Person.findOne({ email })
+
+  if (candidate) {
+    const isPasswordcorrect = compareSync(password, candidate.password)
+    if (isPasswordcorrect) {
+      const token = jwt.sign({ email: candidate.email }, process.env.secret)
+      return res.json({ token })
+    } else {
+      return res.json({ status: 'error', message: 'password is not correct' })
+    }
+  } else {
+    return res.json({ status: 'error', message: 'user not found' })
+  }
 }

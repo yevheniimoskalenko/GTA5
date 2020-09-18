@@ -17,7 +17,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button @click="login">sign in</el-button>
+            <el-button :loading="loading" @click="login">sign in</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -30,7 +30,8 @@ export default {
   auth: false,
   data() {
     return {
-      data: { email: '', password: '' },
+      loading: false,
+      data: { email: 'testjokerqwerty@gmail.com', password: '1qaz2wsx' },
       rules: {
         email: [
           { required: true, message: 'email is required' },
@@ -39,17 +40,32 @@ export default {
       }
     }
   },
+  created() {
+    if (this.$auth.$state.loggedIn) {
+      this.$router.replace({ name: 'panel' })
+    }
+  },
   methods: {
     login() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
           try {
+            this.loading = true
             const data = {
               email: this.data.email,
               password: this.data.password
             }
             await this.$auth.loginWith('local', { data })
-          } catch (e) {}
+            this.$router.push({ name: 'panel' })
+          } catch (e) {
+            this.$message({
+              message: 'user is not logged in',
+              type: 'error'
+            })
+            console.log(e)
+          } finally {
+            this.loading = false
+          }
         } else {
           return false
         }

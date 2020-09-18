@@ -1,11 +1,19 @@
 <template>
   <div>
-    {{ $auth.$state }}
+    {{ $auth.$state.user.email }}
+    <el-button @click="logout">logout</el-button>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  middleware: ['auth'],
+  methods: {
+    logout() {
+      this.$auth.logout()
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
